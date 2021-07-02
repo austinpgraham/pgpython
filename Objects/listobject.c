@@ -2790,6 +2790,7 @@ static PyMethodDef list_methods[] = {
     LIST_COUNT_METHODDEF
     LIST_REVERSE_METHODDEF
     LIST_SORT_METHODDEF
+    LIST_GET_METHODDEF
     {"__class_getitem__", (PyCFunction)Py_GenericAlias, METH_O|METH_CLASS, PyDoc_STR("See PEP 585")},
     {NULL,              NULL}           /* sentinel */
 };
@@ -2806,6 +2807,19 @@ static PySequenceMethods list_as_sequence = {
     (binaryfunc)list_inplace_concat,            /* sq_inplace_concat */
     (ssizeargfunc)list_inplace_repeat,          /* sq_inplace_repeat */
 };
+
+static PyObject *
+list_get_impl(PyListObject* self, PyObject* item, PyObject* alt)
+{
+    Py_ssize_t i = PyNumber_AsSsize_t(item, PyExc_IndexError);
+    if (i == -1 && PyErr_Occurred()) {
+        return NULL;
+    }
+
+    if (!valid_index(i, Py_SIZE(self))) return alt;
+    Py_IncRef(self->ob_item[i]);
+    return self->ob_item[i];
+}
 
 static PyObject *
 list_subscript(PyListObject* self, PyObject* item)
