@@ -2808,6 +2808,19 @@ static PySequenceMethods list_as_sequence = {
 };
 
 static PyObject *
+list_get_impl(PyListObject* self, PyObject* item, PyObject* alt)
+{
+    Py_ssize_t i = PyNumber_AsSsize_t(item, PyExc_IndexError);
+    if (i == -1 && PyErr_Occurred()) {
+        return NULL;
+    }
+
+    PyObject* result = list_item(self, i);
+    if (result == NULL) return alt;
+    return result;
+}
+
+static PyObject *
 list_subscript(PyListObject* self, PyObject* item)
 {
     if (_PyIndex_Check(item)) {
