@@ -2816,9 +2816,9 @@ list_get_impl(PyListObject* self, PyObject* item, PyObject* alt)
         return NULL;
     }
 
-    PyObject* result = list_item(self, i);
-    if (result == NULL) return alt;
-    return result;
+    if (!valid_index(i, Py_SIZE(self))) return alt;
+    Py_IncRef(self->ob_item[i]);
+    return self->ob_item[i];
 }
 
 static PyObject *
