@@ -2,6 +2,24 @@
 preserve
 [clinic start generated code]*/
 
+PyDoc_STRVAR(list_get__doc__,
+"get($self, index, alternate, /)\n"
+"--\n"
+"\n"
+"Get object at index or alternate value.");
+
+#define LIST_GET_METHODDEF      \
+    {"get", (PyCFunction)(void(*)(void))list_get, METH_FASTCALL, list_get__doc__},
+
+static PyObject *
+list_get_impl(PyListObject *self, PyObject* item, PyObject* alt);
+
+static PyObject *
+list_get(PyListObject* self, PyObject *const *args, Py_ssize_t nargs)
+{
+    return list_get_impl(self, args[0], nargs <= 1 ? NULL : args[1]);
+}
+
 PyDoc_STRVAR(list_insert__doc__,
 "insert($self, index, object, /)\n"
 "--\n"
