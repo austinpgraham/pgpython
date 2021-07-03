@@ -2816,7 +2816,10 @@ list_get_impl(PyListObject* self, PyObject* item, PyObject* alt)
         return NULL;
     }
 
-    if (!valid_index(i, Py_SIZE(self))) return alt;
+    if (!valid_index(i, Py_SIZE(self))) {
+        Py_IncRef(alt);
+        return alt;
+    }
     Py_IncRef(self->ob_item[i]);
     return self->ob_item[i];
 }
